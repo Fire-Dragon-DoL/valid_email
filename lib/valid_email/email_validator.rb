@@ -5,6 +5,9 @@ require 'valid_email/validate_email'
 class EmailValidator < ActiveModel::EachValidator
   def validate_each(record,attribute,value)
     begin
+      return if options[:allow_nil] && value.nil?
+      return if options[:allow_blank] && value.blank?
+      
       r = ValidateEmail.valid?(value)
       # Check if domain has DNS MX record
       if r && options[:mx]
